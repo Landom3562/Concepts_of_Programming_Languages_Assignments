@@ -1,0 +1,31 @@
+#lang scheme
+(define (lambda1 number) (* number number))
+(define (lambda2) (print "I am a simple lambda function which only prints to screen :)"))
+
+(define (figure) (cons (cons (cons 3 (cons 1992 (cons (cons (cons "Adil" "Burak") (list (cons "Hüseyin" "Samet") '() "Dilek" "Altuğ")) (list "Cansu" "Ege" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2))) (list "Didem" lambda1 (cons "Büşra" (cons "Serhat" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2)))))))))) (cons 3 (cons 1992 (cons (cons (cons "Adil" "Burak") (list (cons "Hüseyin" "Samet") '() "Dilek" "Altuğ")) (list "Cansu" "Ege" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2))) (list "Didem" lambda1 (cons "Büşra" (cons "Serhat" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2))))))))))) (cons (cons 1992 (cons (cons (cons "Adil" "Burak") (list (cons "Hüseyin" "Samet") '() "Dilek" "Altuğ")) (list "Cansu" "Ege" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2))) (list "Didem" lambda1 (cons "Büşra" (cons "Serhat" (cons (cons (cons 1923 "Güliz") "Nuri") (cons "Eren" (cons '() lambda2))))))))) (cons (cons (cons (cons "Adil" "Burak") (cons "Ersin" 7)) "Didem") lambda1))))
+
+(define (last-index list) (if (null? (cdr list)) (car list) (last-index (cdr list))))
+(define (delete item list1) (if (equal? item (car list1)) (cdr list1) (cons (car list1) (delete item (cdr list1)))))
+
+(define (string-or-number? item) (or (string? item) (number? item)))
+
+(define visited '())
+
+(define (myproc v1 v2 v3) (cond ((member v1 visited) '()) ((pair? v1) (cons (myproc (cdr v1) v2 v3) (myproc (car v1) v2 v3))) ((and (list? v1) (not (null? v1))) (cons (myproc (last-index v1) v2 v3) (myproc (delete (last-index v1) v1) v2 v3))) (else (cond ((null? v1) '()) ((string-or-number? v1) (if (v2 v1) (cons (v3 v1) (set! visited (append visited (list v1)))) '())) ((procedure? v1) (cons (v3 v1) (set! visited (append visited (list v1)))))))))
+
+
+(define (longer-than-5? item) (if (string? item) (if (> (string-length item) 5) #t #f) #f))
+(define (print-strings item) (if (string? item) (println item) (void)))
+(define (lambda1? item) (equal? item lambda1))
+(define (lambda2? item) (equal? item lambda2))
+
+
+(define (delete-voids item) (void)) ;Because I used cons for doing two tasks at the same time in myproc function, output of myproc turns into a bunch of voids.This function solves that by making the output void.
+(delete-voids (myproc (figure) string-or-number? println))
+(set! visited '()) ;To reset visited list so the new statement can work properly.
+(delete-voids (myproc (figure) longer-than-5? print-strings))
+(set! visited '())
+;(delete-voids (myproc (figure) lambda1? println))
+(set! visited '())
+
+
